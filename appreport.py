@@ -4,35 +4,51 @@ from datetime import datetime, timedelta
 import os
 
 # --- 1. CONFIGURACIÓN INICIAL ---
-st.set_page_config(page_title="Dashboard Sauco Seguros", layout="wide")
+st.set_page_config(page_title="Dashboard Sauco BPO", layout="wide")
 
+# Contraseña definida
 CONTRASEÑA_CORRECTA = "Sauco2026*"
+NOMBRE_LOGO = "logo_sauco.jpg"
 
 # --- 2. SISTEMA DE SEGURIDAD (LOGIN) ---
 if "autenticado" not in st.session_state:
     st.session_state["autenticado"] = False
 
 def mostrar_login():
-    st.markdown("<br><br><h1 style='text-align: center;'>🔒 Acceso Restringido</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #666;'>Dashboard de uso exclusivo para supervisión y Talento Humano de Sauco.</p>", unsafe_allow_html=True)
+    # Espaciado superior
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 1, 1])
+    # Centramos todo el bloque de login
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    
     with col2:
-        st.markdown("<div style='background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>", unsafe_allow_html=True)
-        pwd_input = st.text_input("Ingresa la contraseña:", type="password")
+        # Carga del Logo en la pantalla de inicio
+        if os.path.exists(NOMBRE_LOGO):
+            st.image(NOMBRE_LOGO, use_container_width=True)
         
-        if st.button("Ingresar al Dashboard", use_container_width=True):
+        st.markdown("<h1 style='text-align: center;'>🔒 Acceso Restringido</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #666; font-weight: bold;'>Dashboard de uso exclusivo Lideres Negociación y Calidad.</p>", unsafe_allow_html=True)
+        
+        st.markdown("<div style='background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>", unsafe_allow_html=True)
+        pwd_input = st.text_input("Ingresa la contraseña corporativa:", type="password")
+        
+        if st.button("Ingresar al Sistema", use_container_width=True):
             if pwd_input == CONTRASEÑA_CORRECTA:
                 st.session_state["autenticado"] = True
                 st.rerun()
             else:
-                st.error("❌ Contraseña incorrecta.")
+                st.error("❌ Contraseña incorrecta. Inténtalo de nuevo.")
         st.markdown("</div>", unsafe_allow_html=True)
 
+# Barrera de seguridad
 if not st.session_state["autenticado"]:
     mostrar_login()
     st.stop()
 
+
+# =====================================================================
+# --- ZONA SEGURA (DASHBOARD) ---
+# =====================================================================
 
 # --- 3. ESTILOS VISUALES ---
 st.markdown("""
@@ -49,6 +65,7 @@ REEMPLAZOS = {"sthefanymoreno": "Nathalia Moreno", "gestor barranquilla av villa
 
 def obtener_equipo(nombre):
     n = nombre.lower().strip()
+    # Wendy Garcia en Proyectos según última instrucción
     if n in ["ludy novoa", "viviana capera", "wendy garcia"]: return "Equipo Proyectos", "#1e40af"
     elif n in ["danna bernal", "angie hernandez", "britney sanchez", "britny sanchez", "ingrid mahecha", "nathalia moreno"]: return "Equipo Davivienda - Comfandi", "#991b1b"
     else: return "Equipo Avillas", "#5b21b6"
@@ -66,35 +83,26 @@ def calcular_puntos(nombre, hora_ini):
     elif hora_ini <= margen: return "#d97706", "EN MARGEN"
     else: return "#dc2626", "RETARDO"
 
-
-# --- 4. INTERFAZ SUPERIOR Y LOGO ---
+# --- INTERFAZ SUPERIOR ---
 col_l, col_t, col_btn = st.columns([1, 3, 1])
 with col_l:
-    try:
-        st.image("logo_sauco.jpg", width=160)
-    except Exception:
-        st.info("Logo corporativo")
-
+    if os.path.exists(NOMBRE_LOGO): st.image(NOMBRE_LOGO, width=150)
 with col_t:
     st.title("Dashboard Inicio Jornada")
-    st.write("Control Operativo y Reporte para Talento Humano")
-
+    st.write("Gestión de Líderes Negociación y Calidad")
 with col_btn:
     st.write("") 
     if st.button("🔒 Cerrar Sesión"):
         st.session_state["autenticado"] = False
         st.rerun()
 
-
-# --- 5. BARRA LATERAL: NOVEDADES MANUALES ---
+# --- BARRA LATERAL: NOVEDADES ---
 st.sidebar.header("📝 Registro de Novedades")
-st.sidebar.write("Ingresa los nombres de los asesores ausentes (separados por coma):")
-novedades_input = st.sidebar.text_area("Ejemplo: Juan Perez, Maria Gomez", "")
+novedades_input = st.sidebar.text_area("Nombres de ausentes (separados por coma):", "")
 lista_novedades = [n.strip() for n in novedades_input.split(",") if n.strip()]
 
-
-# --- 6. PROCESAMIENTO DEL ARCHIVO ---
-file = st.file_uploader("Cargar reporte de llamadas (.txt)", type=['txt'])
+# --- PROCESAMIENTO ---
+file = st.file_uploader("Cargar reporte diario (.txt)", type=['txt'])
 
 if file:
     df = pd.read_csv(file, sep='\t')
@@ -138,18 +146,18 @@ if file:
                         </div>
                     """, unsafe_allow_html=True)
 
-    # --- 7. EXPORTACIÓN ---
+    # --- EXPORTACIÓN ---
     st.markdown("---")
-    st.subheader("📥 Exportar Reporte Diario para RRHH")
+    st.subheader("📥 Reporte Consolidado")
     df_export = pd.DataFrame(datos_exportacion)
     st.dataframe(df_export, use_container_width=True) 
     
     csv = df_export.to_csv(index=False).encode('utf-8')
     st.download_button(
-        label="Descargar Reporte en Excel (CSV)",
+        label="Descargar Reporte para Gestión Humana",
         data=csv,
-        file_name=f"Reporte_Asistencia_Sauco_{datetime.today().strftime('%Y_%m_%d')}.csv",
+        file_name=f"Reporte_Negociacion_Calidad_{datetime.today().strftime('%Y_%m_%d')}.csv",
         mime="text/csv",
     )
 else:
-    st.info("Carga el archivo del día para visualizar los indicadores.")
+    st.info("Sube el archivo del día para activar el panel visual.")
