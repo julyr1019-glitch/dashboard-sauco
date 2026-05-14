@@ -15,14 +15,10 @@ if "autenticado" not in st.session_state:
     st.session_state["autenticado"] = False
 
 def mostrar_login():
-    # Espaciado superior
     st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Centramos todo el bloque de login
     col1, col2, col3 = st.columns([1, 1.5, 1])
     
     with col2:
-        # Carga del Logo en la pantalla de inicio
         if os.path.exists(NOMBRE_LOGO):
             st.image(NOMBRE_LOGO, use_container_width=True)
         
@@ -40,7 +36,6 @@ def mostrar_login():
                 st.error("❌ Contraseña incorrecta. Inténtalo de nuevo.")
         st.markdown("</div>", unsafe_allow_html=True)
 
-# Barrera de seguridad
 if not st.session_state["autenticado"]:
     mostrar_login()
     st.stop()
@@ -65,10 +60,13 @@ REEMPLAZOS = {"sthefanymoreno": "Nathalia Moreno", "gestor barranquilla av villa
 
 def obtener_equipo(nombre):
     n = nombre.lower().strip()
-    # Wendy Garcia en Proyectos según última instrucción
-    if n in ["ludy novoa", "viviana capera", "wendy garcia"]: return "Equipo Proyectos", "#1e40af"
-    elif n in ["danna bernal", "angie hernandez", "britney sanchez", "britny sanchez", "ingrid mahecha", "nathalia moreno"]: return "Equipo Davivienda - Comfandi", "#991b1b"
-    else: return "Equipo Avillas", "#5b21b6"
+    # Actualización: Britny Sanchez retirada de Davivienda para que pase a Avillas por defecto
+    if n in ["ludy novoa", "viviana capera", "wendy garcia"]: 
+        return "Equipo Proyectos", "#1e40af"
+    elif n in ["danna bernal", "angie hernandez", "ingrid mahecha", "nathalia moreno"]: 
+        return "Equipo Davivienda - Comfandi", "#991b1b"
+    else: 
+        return "Equipo Avillas", "#5b21b6" # <-- Britny caerá automáticamente aquí
 
 def calcular_puntos(nombre, hora_ini):
     n = nombre.lower().strip()
