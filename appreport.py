@@ -58,15 +58,19 @@ st.markdown("""
 
 REEMPLAZOS = {"sthefanymoreno": "Nathalia Moreno", "gestor barranquilla av villas": "Armando Vega"}
 
+# --- LÓGICA DE ASIGNACIÓN DE EQUIPOS ---
 def obtener_equipo(nombre):
     n = nombre.lower().strip()
-    # Actualización: Danna Bernal retirada de Davivienda para que pase a Avillas por defecto
-    if n in ["ludy novoa", "viviana capera", "wendy garcia"]: 
+    
+    # Actualización: Se agrega a "maria marin" a la lista del Equipo Proyectos
+    if n in ["ludy novoa", "viviana capera", "wendy garcia", "maria marin"]: 
         return "Equipo Proyectos", "#1e40af"
+        
     elif n in ["angie hernandez", "ingrid mahecha", "nathalia moreno"]: 
         return "Equipo Davivienda - Comfandi", "#991b1b"
+        
     else: 
-        return "Equipo Avillas", "#5b21b6" # <-- Danna caerá automáticamente aquí
+        return "Equipo Avillas", "#5b21b6"
 
 def calcular_puntos(nombre, hora_ini):
     n = nombre.lower().strip()
