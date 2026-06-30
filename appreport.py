@@ -62,11 +62,12 @@ REEMPLAZOS = {"sthefanymoreno": "Nathalia Moreno", "gestor barranquilla av villa
 def obtener_equipo(nombre):
     n = nombre.lower().strip()
     
-    # Actualización: Se agrega a "maria marin" a la lista del Equipo Proyectos
-    if n in ["ludy novoa", "viviana capera", "wendy garcia", "maria marin"]: 
+    # Se retiró a Maria Marin de esta lista
+    if n in ["ludy novoa", "viviana capera", "wendy garcia"]: 
         return "Equipo Proyectos", "#1e40af"
         
-    elif n in ["angie hernandez", "ingrid mahecha", "nathalia moreno"]: 
+    # Corrección: Se agregó a Maria Marin a la lista de Comfandi
+    elif n in ["angie hernandez", "ingrid mahecha", "nathalia moreno", "maria marin"]: 
         return "Equipo Davivienda - Comfandi", "#991b1b"
         
     else: 
